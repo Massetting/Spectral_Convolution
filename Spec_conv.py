@@ -38,25 +38,36 @@ def select_wavelength(bandtot,cbitot):
     watt_pos=np.empty((0),dtype=int)
     index=cbitot[...,[0]]
     cbi=cbitot[:,1:30]
+    indexg=cbitot[...,[31]]
+    geocbi=cbitot[:,32:]
     indB=bandtot[:,[0]]
     valB=bandtot[:,[1]]
     for i,element in enumerate(indB):
-        for n,l in enumerate(index):
+        for n,l in enumerate(indexg):
             if element==l:
                 hyper_pos=np.append(hyper_pos,n)#print (i, element, n, l)
                 watt_pos=np.append(watt_pos,i)
-    selcbi=cbi[hyper_pos]
+    selcbi=geocbi[hyper_pos]
     selband=valB[watt_pos]
     bandvalue=(np.sum(np.multiply(selcbi,selband),axis=0))/np.sum(selband)
     return bandvalue
+b5sg=select_wavelength(b5_cut,cbitot)
+b7sg=select_wavelength(b7_cut,cbitot)
 b5s=select_wavelength(b5_cut,cbitot)
 b7s=select_wavelength(b7_cut,cbitot)
 
 fig,ax=methods.open_figure(1,1)
+x=np.arange(0,100)/100
+y=x*0.78-0.0280
+ax.plot(x,y,"g-")
 ax.scatter(b5s,b7s)
+ax.scatter(b5sg,b7sg,color="r")
 lab=labbs[1:30]
+labg=labbs[32:]
 for i, txt in enumerate(lab):
-    ax.annotate(txt, (b5s[i],b7s[i]))
+    ax.text(b5s[i],b7s[i],txt,fontsize=5 )
+for i, txt in enumerate(labg):
+    ax.text(b5sg[i],b7sg[i],txt,fontsize=5)
     
 
 methods.test_plot(B7,"k--",ax)
