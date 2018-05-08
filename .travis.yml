@@ -1,0 +1,12 @@
+language: python
+python:
+    - "3.6"
+
+install:
+    - make build
+
+script:
+    - Spec_conv.py
+
+notifications:
+    - email: false
